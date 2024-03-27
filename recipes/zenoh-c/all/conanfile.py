@@ -18,11 +18,19 @@ class ZenohCPackageConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
+        "ZENOHC_BUILD_WITH_LOGGER_AUTOINIT":[True, False],
+        "ZENOHC_BUILD_WITH_SHARED_MEMORY":[True, False],
+        "ZENOHC_CARGO_CHANNEL":["stable", "nightly"],
+        "ZENOHC_CARGO_FLAGS": ["ANY"],
     }
 
     default_options = {
         "shared": False,
         "fPIC": True,
+        "ZENOHC_BUILD_WITH_LOGGER_AUTOINIT": True,
+        "ZENOHC_BUILD_WITH_SHARED_MEMORY": True,
+        "ZENOHC_CARGO_CHANNEL": "stable",
+        "ZENOHC_CARGO_FLAGS": "",
     }
 
     def export_sources(self):
@@ -31,13 +39,10 @@ class ZenohCPackageConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
-        self.settings.rm_safe("compiler.cppstd")
-        self.settings.rm_safe("compiler.libcxx")
 
     def configure(self):
         if self.options.shared:
             self.options.rm_safe("fPIC")
-        # for plain C projects only
         self.settings.rm_safe("compiler.cppstd")
         self.settings.rm_safe("compiler.libcxx")
 
@@ -51,6 +56,8 @@ class ZenohCPackageConan(ConanFile):
         tc = CMakeToolchain(self)            
         for opt, val in self.options.items():
             tc.variables[opt] = val
+        tc.variables["ZENOHC_LIB_STATIC"] = "True" if tc.variables["shared"] == "False" else "False"
+    
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
