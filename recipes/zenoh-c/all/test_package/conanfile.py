@@ -1,6 +1,6 @@
 import os
 from conan import ConanFile
-from conan.tools.cmake import CMake, cmake_layout
+from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout, CMakeDeps
 from conan.tools.build import can_run
 
 
@@ -14,6 +14,10 @@ class ZenohCPackageTestConan(ConanFile):
 
     def layout(self):
         cmake_layout(self)
+
+    def configure(self):
+        self.settings.rm_safe("compiler.cppstd")
+        self.settings.rm_safe("compiler.libcxx")
 
     def build(self):
         cmake = CMake(self)
