@@ -59,7 +59,7 @@ class ZenohCPackageConan(ConanFile):
         tc = CMakeToolchain(self)
         for opt, val in self.options.items():
             tc.variables[opt] = val
-        tc.variables["ZENOHC_LIB_STATIC"] = "True" if tc.variables["shared"] == "False" else "False"
+        tc.variables["ZENOHC_LIB_STATIC"] = str(self.options.shared)
     
         tc.generate()
         deps = CMakeDeps(self)
