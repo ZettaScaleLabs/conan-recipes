@@ -2,6 +2,9 @@ from conan import ConanFile
 from conan.tools.files import apply_conandata_patches, get, copy, export_conandata_patches, rm, rmdir
 from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout, CMakeDeps
 import os
+
+required_conan_version = ">=1.53.0"
+
 class ZenohCPackageConan(ConanFile):
     name = "zenohc"
     version = "0.10.1-rc"
