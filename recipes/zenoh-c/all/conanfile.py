@@ -56,7 +56,7 @@ class ZenohCPackageConan(ConanFile):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
     def generate(self):
-        tc = CMakeToolchain(self)            
+        tc = CMakeToolchain(self)
         for opt, val in self.options.items():
             tc.variables[opt] = val
         tc.variables["ZENOHC_LIB_STATIC"] = "True" if tc.variables["shared"] == "False" else "False"
