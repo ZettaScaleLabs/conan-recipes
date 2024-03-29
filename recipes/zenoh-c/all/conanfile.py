@@ -1,4 +1,5 @@
 from conan import ConanFile
+from conan.errors import ConanInvalidConfiguration
 from conan.tools.files import apply_conandata_patches, get, copy, export_conandata_patches, rm, rmdir
 from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout, CMakeDeps
 import os
@@ -36,6 +37,18 @@ class ZenohCPackageConan(ConanFile):
         "ZENOHC_CARGO_FLAGS": "",
     }
 
+    @property
+    def _supported_platforms(self):
+        return [
+            ("Windows", "x86_64"),
+            ("Linux", "x86_64"),
+            ("Linux", "armv6"),
+            ("Linux", "armv7hf"),
+            ("Linux", "armv8"),
+            ("Macos", "x86_64"),
+            ("Macos", "armv8"),
+        ]
+
     def export_sources(self):
         export_conandata_patches(self)
 
@@ -51,6 +64,10 @@ class ZenohCPackageConan(ConanFile):
 
     def layout(self):
         cmake_layout(self)
+
+    def validate(self):
+        if (self.settings.os, self.settings.arch) not in self._supported_platforms:
+            raise ConanInvalidConfiguration("{}/{} combination is not supported".format(self.settings.os, self.settings.arch))
 
     def source(self):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
@@ -88,3 +105,9 @@ class ZenohCPackageConan(ConanFile):
             self.cpp_info.libs = ["zenohcd"]
         else:
             self.cpp_info.libs = ["zenohc"]
+        if self.settings.os == "Windows":
+            self.cpp_info.system_libs = ["ws2_32", "crypt32", "secur32", "bcrypt", "ncrypt", "userenv", "ntdll", "iphlpapi", "runtimeobject"]
+        elif self.settings.os == "Linux":
+            self.cpp_info.system_libs = ["rt", "pthread", "m", "dl"]
+        elif self.settings.os == "Macos":
+            self.cpp_info.frameworks = ["Foundation", "Security"]
