@@ -27,6 +27,6 @@ sources:
       "armv8":
         url: "https://github.com/eclipse-zenoh/zenoh-c/releases/download/0.10.1-rc/zenoh-c-0.10.1-rc-aarch64-apple-darwin.zip"
         sha256: "0df497b16cf1bd968deea36aca43d6c086a54d69ea78e3feaed309760e0dcaa4"
-    "licence":
+    "license":
         url: "https://github.com/eclipse-zenoh/zenoh-c/raw/0.10.1-rc/LICENSE"
         sha256: "01a44774f7b1a453595c7c6d7f7308284ba6a1059dc49e14dad6647e1d44a338"
