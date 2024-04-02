@@ -1,6 +1,6 @@
 from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
-from conan.tools.files import copy, get
+from conan.tools.files import copy, download, get
 import os
 
 required_conan_version = ">=1.53.0"
@@ -18,6 +18,13 @@ class ZenohCPackageConan(ConanFile):
 
     package_type = "library"
     settings = "os", "compiler", "build_type", "arch"
+
+    options = {
+        "shared": [True],
+    }
+    default_options = {
+        "shared": True,
+    }
 
     @property
     def _supported_platforms(self):
@@ -47,22 +54,15 @@ class ZenohCPackageConan(ConanFile):
 
     def build(self):
         if self.settings.os == "Windows" and self.settings.compiler == "msvc":
-            get(
-                self,
-                **self.conan_data["sources"][self.version][str(self.settings.os)]["{}_msvc".format(str(self.settings.arch))],
-                strip_root=True,
-            )
+            get(self, **self.conan_data["sources"][self.version][str(self.settings.os)]["{}_msvc".format(str(self.settings.arch))])
         else:
-            get(
-                self,
-                **self.conan_data["sources"][self.version][str(self.settings.os)][str(self.settings.arch)],
-                strip_root=True,
-            )
+            get(self, **self.conan_data["sources"][self.version][str(self.settings.os)][str(self.settings.arch)])
+        download(self, **self.conan_data["sources"][self.version]["license"], filename="LICENSE")
 
     def package(self):
-        copy(self, "LICENSE", self.source_folder, os.path.join(self.package_folder, "licenses"))
-        copy(self, "lib/", self.source_folder, self.package_folder)
-        copy(self, "include/", self.source_folder, self.package_folder)
+        copy(self, "LICENSE", self.build_folder, os.path.join(self.package_folder, "licenses"))
+        copy(self, "*", os.path.join(self.build_folder, "lib"), os.path.join(self.package_folder, "lib"))
+        copy(self, "*", os.path.join(self.build_folder, "include"), os.path.join(self.package_folder, "include"))
 
     def package_info(self):
         self.cpp_info.libs = ["zenohc"]
