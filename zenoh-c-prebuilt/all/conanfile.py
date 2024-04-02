@@ -53,10 +53,7 @@ class ZenohCPackageConan(ConanFile):
         pass
 
     def build(self):
-        if self.settings.os == "Windows" and self.settings.compiler == "msvc":
-            get(self, **self.conan_data["sources"][self.version][str(self.settings.os)]["{}_msvc".format(str(self.settings.arch))])
-        else:
-            get(self, **self.conan_data["sources"][self.version][str(self.settings.os)][str(self.settings.arch)])
+        get(self, **self.conan_data["sources"][self.version][str(self.settings.os)][str(self.settings.arch)])
         download(self, **self.conan_data["sources"][self.version]["license"], filename="LICENSE")
 
     def package(self):
