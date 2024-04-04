@@ -1,6 +1,9 @@
 from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
 from conan.tools.files import copy, download, get
+from conan.tools.scm import Version
+
+import platform
 import os
 
 required_conan_version = ">=1.53.0"
@@ -52,6 +55,11 @@ class ZenohCPackageConan(ConanFile):
     def validate(self):
         if (self.settings.os, self.settings.arch) not in self._supported_platforms:
             raise ConanInvalidConfiguration("{}/{} target is not supported".format(self.settings.os, self.settings.arch))
+        if self.settings.os == "Linux":
+            libver = platform.libc_ver()
+            print(libver)
+            if libver[0] == "glibc" and Version(libver[1]) < '2.29':
+                raise ConanInvalidConfiguration("This library requires glibc >= 2.29")
 
     def source(self):
         pass
