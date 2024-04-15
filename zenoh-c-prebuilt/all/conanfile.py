@@ -73,6 +73,9 @@ class ZenohCPackageConan(ConanFile):
         copy(self, "*", os.path.join(self.build_folder, "include"), os.path.join(self.package_folder, "include"))
 
     def package_info(self):
+        self.cpp_info.set_property("cmake_file_name", "zenohc")
+        self.cpp_info.set_property("cmake_target_name", "zenohc::lib")
+
         self.cpp_info.libs = ["zenohc"]
         self.cpp_info.libdirs = ["lib"]
         self.cpp_info.includedirs = ["include"]
