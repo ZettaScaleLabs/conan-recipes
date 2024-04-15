@@ -10,6 +10,7 @@ class ZenohCPackageTestConan(ConanFile):
     test_type = "explicit"
 
     def requirements(self):
+        self.tool_requires("cmake/[>=3.16 <4]")
         self.requires(self.tested_reference_str)
 
     def layout(self):
