@@ -101,6 +101,11 @@ class ZenohCPackageConan(ConanFile):
             self.cpp_info.libs = ["zenohcd"]
         else:
             self.cpp_info.libs = ["zenohc"]
+        
+        self.cpp_info.set_property("cmake_file_name", "zenohc")
+        self.cpp_info.set_property("cmake_target_name", "zenohc::lib")
+        self.cpp_info.set_property("cmake_target_aliases", [f"zenohc::{'shared' if self.options.shared else 'static'}"])
+
         if self.settings.os == "Windows":
             self.cpp_info.system_libs = ["ws2_32", "crypt32", "secur32", "bcrypt", "ncrypt", "userenv", "ntdll", "iphlpapi", "runtimeobject"]
         elif self.settings.os == "Linux":
