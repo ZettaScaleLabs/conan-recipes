@@ -68,6 +68,9 @@ class ZenohCPackageConan(ConanFile):
         if (self.settings.os, self.settings.arch) not in self._supported_platforms:
             raise ConanInvalidConfiguration("{}/{} combination is not supported".format(self.settings.os, self.settings.arch))
 
+    def build_requirements(self):
+        self.tool_requires("cmake/[>=3.16 <4]")
+
     def source(self):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
