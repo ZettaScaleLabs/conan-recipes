@@ -78,7 +78,8 @@ class ZenohCPackageConan(ConanFile):
         tc = CMakeToolchain(self)
         for opt, val in self.options.items():
             tc.variables[opt] = val
-        tc.variables["ZENOHC_LIB_STATIC"] = str(self.options.shared)
+        tc.variables["ZENOHC_LIB_STATIC"] = str(not self.options.shared)
+        tc.variables["ZENOHC_INSTALL_STATIC_LIBRARY"] = tc.variables["ZENOHC_LIB_STATIC"]
     
         tc.generate()
         deps = CMakeDeps(self)
