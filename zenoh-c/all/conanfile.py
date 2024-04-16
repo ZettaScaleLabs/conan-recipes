@@ -25,7 +25,6 @@ class ZenohCPackageConan(ConanFile):
         "fPIC": [True, False],
         "ZENOHC_BUILD_WITH_LOGGER_AUTOINIT":[True, False],
         "ZENOHC_BUILD_WITH_SHARED_MEMORY":[True, False],
-        "ZENOHC_CARGO_CHANNEL":["stable", "nightly"],
         "ZENOHC_CARGO_FLAGS": ["ANY"],
     }
 
@@ -34,7 +33,6 @@ class ZenohCPackageConan(ConanFile):
         "fPIC": True,
         "ZENOHC_BUILD_WITH_LOGGER_AUTOINIT": True,
         "ZENOHC_BUILD_WITH_SHARED_MEMORY": True,
-        "ZENOHC_CARGO_CHANNEL": "stable",
         "ZENOHC_CARGO_FLAGS": "",
     }
 
