@@ -8,7 +8,6 @@ required_conan_version = ">=1.53.0"
 
 class ZenohCPackageConan(ConanFile):
     name = "zenohc"
-    version = "0.10.1-rc"
     description = "C-API for Eclipse Zenoh: Zero Overhead Pub/sub, Store/Query and Compute protocol"
     tags = ["iot", "networking", "robotics", "messaging", "ros2", "edge-computing", "micro-controller"]
     license = "Apache License 2.0"
