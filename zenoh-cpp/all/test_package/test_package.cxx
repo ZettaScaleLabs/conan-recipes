@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 #ifdef ZENOHCXX_ZENOHC
     if (!config.insert_json(Z_CONFIG_LISTEN_KEY, "[\"tcp/0.0.0.0:7447\"]")) {
 #elif ZENOHCXX_ZENOHPICO
-        if (!config.insert(Z_CONFIG_CONNECT_KEY, locator))
+    if (!config.insert(Z_CONFIG_CONNECT_KEY, "[\"tcp/0.0.0.0:7447\"]")) {
 #else
 #error "Unknown zenoh backend"
 #endif
