@@ -4,7 +4,7 @@ from conan.tools.cmake import CMake, cmake_layout
 from conan.tools.build import can_run
 
 
-class ZenohCPackageTestConan(ConanFile):
+class ZenohPicoPackageTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain", "VirtualRunEnv"
     test_type = "explicit"
