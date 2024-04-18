@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(test_package LANGUAGES CXX)
 
-set(ZENOHCXX_LIB "zenohc")
-
 find_package(zenohcpp REQUIRED CONFIG)
 
 add_executable(${PROJECT_NAME} test_package.cxx)
