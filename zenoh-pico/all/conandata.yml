@@ -1,0 +1,4 @@
+sources:
+  "0.10.1-rc":
+    url: "https://github.com/eclipse-zenoh/zenoh-pico/archive/refs/tags/0.10.1-rc.tar.gz"
+    sha256: "7b615515ac844470ec7806921e8106b2923f6c43e242b34f062954de7560b799"
