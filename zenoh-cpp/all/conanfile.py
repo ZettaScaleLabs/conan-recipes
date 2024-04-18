@@ -14,7 +14,7 @@ class ZenohCppPackageConan(ConanFile):
     author = "ZettaScale Zenoh Team <zenoh@zettascale.tech>"
 
     url = "https://github.com/conan-io/conan-center-index"
-    homepage = "https://github.com/project/package"
+    homepage = "https://github.com/eclipse-zenoh/zenoh-cpp"
 
     package_type = "header-library"
     settings = "os", "arch", "compiler", "build_type"
