@@ -13,7 +13,7 @@ class ZenohCppPackageConan(ConanFile):
     license = "EPL-2.0 OR Apache-2.0"
     author = "ZettaScale Zenoh Team <zenoh@zettascale.tech>"
 
-    url = "https://github.com/conan-io/conan-center-index"
+    url = "https://github.com/zettascalelabs/conan-recipes"
     homepage = "https://github.com/eclipse-zenoh/zenoh-cpp"
 
     package_type = "header-library"

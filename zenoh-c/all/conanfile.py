@@ -10,10 +10,10 @@ class ZenohCPackageConan(ConanFile):
     name = "zenohc"
     description = "C-API for Eclipse Zenoh: Zero Overhead Pub/sub, Store/Query and Compute protocol"
     tags = ["iot", "networking", "robotics", "messaging", "ros2", "edge-computing", "micro-controller"]
-    license = "Apache License 2.0"
-    author = "ZettaScale Zenoh Team"
+    license = "EPL-2.0 OR Apache-2.0"
+    author = "ZettaScale Zenoh Team <zenoh@zettascale.tech>"
 
-    url = "https://github.com/conan-io/conan-center-index"
+    url = "https://github.com/zettascalelabs/conan-recipes"
     homepage = "https://github.com/eclipse-zenoh/zenoh-c"
 
     package_type = "library"
