@@ -1,3 +1,7 @@
+# Notice of deprecation
+
+This repository is no longer actively maintained.
+
 # Conan Recipes
 
 This repo regroups [conan](https://conan.io/) recipes for Zenoh C/CPP bindings and implementations: [Zenoh-C](https://github.com/eclipse-zenoh/zenoh-c), [Zenoh-CPP](https://github.com/eclipse-zenoh/zenoh-cpp) and [Zenoh-Pico](https://github.com/eclipse-zenoh/zenoh-pico).
