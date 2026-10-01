@@ -10,32 +10,46 @@ All Zenoh Conan recipes are maintained in this repository. They will be updated 
 
 ## Recipes in this repo
 
-- zenoh-c: Builds Zenoh-C from source. Requires Rust Toolchain preinstalled on the target system in order to compile the library.
-- zenoh-c-prebuilt: Pulls the Zenoh-C pre-compiled release artefacts for the target system (if supported in the release). Does not require Rust Toolchain.
+- rust: Installs an official pre-built Rust toolchain (rustc/cargo). Used as a `tool_requires` by zenoh-c so the compiler version is pinned instead of relying on whatever is installed on the host. Native hosts only: Windows x86_64 (MSVC or GNU), Linux x86_64, macOS x86_64 and armv8. Cross-compiling zenoh-c to other Linux ARM targets still needs extra `rust-std` components that this recipe does not ship.
+- zenoh-c: Builds Zenoh-C from source. Pulls `rust/1.97.1` automatically (matching zenoh-c 1.10.1's `rust-toolchain.toml`). No preinstalled Rust toolchain is required.
 - zenoh-pico: Builds Zenoh-Pico from source.
 - zenoh-cpp: Installs the Zenoh-CPP header-library. Depending on which backend library to be used, installation will require one of Zenoh-Pico or Zenoh-C Conan packages to be installed beforehand.
+
+## Why model Rust as a Conan recipe
+
+Zenoh-C is a C API, but the library is built with Cargo. The usual approach is “install rustup on the machine and hope `rustc` matches `rust-toolchain.toml`”. That splits the toolchain from the rest of the C/C++ graph (CMake, compilers, zenoh-c, zenoh-cpp) and makes CI and developer laptops diverge.
+
+Shipping official `rustc`/`cargo` tarballs as `rust/1.97.1` and pulling them with `tool_requires` keeps everything in Conan:
+
+- The Rust version is a package reference, not a host accident. zenoh-c 1.10.1 pulls `rust/1.97.1` to match its `rust-toolchain.toml`.
+- Consumers do not need a preinstalled toolchain. The rust package fetches, caches, and reuses the same binaries on every machine.
+- Windows MSVC vs GNU, Linux, and macOS each resolve the matching official tarball through `package_id` / `conandata.yml`, instead of documenting per-OS rustup commands.
+- The lock is the Conan graph: one profile, one cache. C++ packages that `require` zenohc inherit a reproducible native library without talking to rustup.
+
+The trade-off is that Conan owns the toolchain path. That is the point: Rust is treated as a build tool like CMake, not as an implicit environment dependency.
 
 ## Installation
 
 Building the recipes requires Conan. Please visit the official Conan website for installation instructions.
 
-Below are examples for building `zenoh-c 0.10.1-rc` with different versions of Conan. In case of issues with a dependency's installation (namely CMake), add the `--build=missing` parameter to the command (or `--build missing` on v1).
-
-### Using Conan v2
+Create the rust package first so zenoh-c can resolve `tool_requires("rust/1.97.1")`.
 
 ```shell
-conan create zenoh-c/all/conanfile.py --version 0.10.1-rc
+conan create rust/all --version 1.97.1
+conan create zenoh-c/all --version 1.10.1
+
+# zenoh-pico is standalone and does not depend on rust or zenoh-c
+conan create zenoh-pico/all --version 1.10.1
+
+# uses zenoh-c by default. For zenoh-pico: -o "&:ZENOH_LIB=zenohpico"
+conan create zenoh-cpp/all --version 1.10.1
 ```
 
-### Using Conan v1
-
-```shell
-conan create zenoh-c/all/conanfile.py zenohc/0.10.1-rc@eclipse-zenoh/release
-```
+> **Note about Windows:** zenoh-c runs Cargo, which compiles and immediately executes `build-script-build.exe` helpers that spawn `rustc`/`cargo`. Windows Defender and other endpoint protection (for example CrowdStrike Falcon) often block that `CreateProcess` with Access Denied (Win32 5). Folder or process exclusions in Defender usually do not help. Build zenoh-c in WSL or on Linux/macOS instead.
 
 ## Usage
 
-To use the installed Zenoh project in your Conan package, you first need to add it to your recipe's `requirements` function. Below is an example to add `zenoh-c 0.10.1-rc` as a dependency.
+To use the installed Zenoh project in your Conan package, you first need to add it to your recipe's `requirements` function. Below is an example to add `zenoh-c 1.10.1` as a dependency.
 
 ```python
 from conan import ConanFile
@@ -46,12 +60,12 @@ class MyPackage(ConanFile):
     # other conan recipe attributes and functions
     
     def requirements(self):
-        self.requires("zenohc/0.10.1-rc")
+        self.requires("zenohc/1.10.1")
 
     # rest of the recipe
 ```
 
-It is also possible to configure options for the dependency. For more details, please refer to the offical Conan documentation for the respective version you are using, or read further below for an example with Zenoh-CPP.
+It is also possible to configure options for the dependency. For more details, please refer to the official Conan documentation, or read further below for an example with Zenoh-CPP.
 
 **Note:** Depending on the project you wish to use, you will probably also need to setup a `CMakeLists` file for your package. Please refer to the recipe's respective `test_package/CMakeLists.txt` for a basic template.
 
@@ -61,5 +75,5 @@ Depending on which backend you choose between zenoh-c and zenoh-pico, you will h
 
 ```python
     def requirements(self):
-        self.requires("zenohcpp/0.10.1-rc", options={"ZENOH_LIB":"zenohpico"})
+        self.requires("zenohcpp/1.10.1", options={"ZENOH_LIB":"zenohpico"})
 ```
